@@ -3,8 +3,7 @@ os.environ['KMP_DUPLICATE_LIB_OK']='true'
 import torch.optim
 from omegaconf import OmegaConf
 from torch.utils.data import DataLoader
-from engine2 import train_warm_up,evaluate,train_one_epoch_SBF, train_one_epoch_SBF_v2,train_one_epoch
-# from engine3 import train_warm_up,evaluate,train_one_epoch_SBF,train_one_epoch
+from engine import train_warm_up, evaluate, train_one_epoch_FIESTA, train_one_epoch
 from losses import SetCriterion
 import numpy as np
 import random
@@ -66,10 +65,11 @@ def get_parser(**parser_kwargs):
         metavar="base_config.yaml",
         help="paths to base configs. Loaded from left-to-right. "
         "Parameters can be overwritten or added with command-line options of the form `--key value`.",
-        default=["configs/efficientUnet_SABSCT_to_CHAOS.yaml"], # CT->MRI (abdominal)
+        # default=["configs/efficientUnet_SABSCT_to_CHAOS.yaml"], # CT->MRI (abdominal)
         # default=["configs/efficientUnet_CHAOS_to_SABSCT.yaml"], # MRI->CT (abdominal)
-        # default=["configs/efficientUnet_bSSFP_to_LEG.yaml"], # bSSFP->LGE (cardiac)
-        # default=["configs/efficientUnet_LEG_to_bSSFP.yaml"], # LGE->bSSFP (cardiac)
+        # default=["configs/efficientUnet_bSSFP_to_LEG.yaml"],    # bSSFP->LGE (cardiac)
+        # default=["configs/efficientUnet_LEG_to_bSSFP.yaml"],    # LGE->bSSFP (cardiac)
+        default=["configs/efficientUnet_prostate_A-rest.yaml"],   # Prostate (A/B/C/D/E/F)
     )
     parser.add_argument(
         "-s",
@@ -99,8 +99,8 @@ def instantiate_from_config(config):
         raise KeyError("Expected key `target` to instantiate.")
     return get_obj_from_str(config["target"])(**config.get("params", dict()))
 
-class DataModuleFromConfig(torch.nn.Module):  # 요 함수 안에 self.dataset_configs들이 언제 initial되는지 모르겠음..
-    def __init__(self, batch_size, train=None, validation=None, test=NoneW,
+class DataModuleFromConfig(torch.nn.Module):
+    def __init__(self, batch_size, train=None, validation=None, test=None,
                  num_workers=None):
         super().__init__()
         self.batch_size = batch_size
@@ -163,10 +163,7 @@ if __name__ == "__main__":
         name=None
         raise ValueError('no config')
 
-    nowname = now +f'_seed{seed}'+ name + opt.postfix + "_tesesr"
-    # nowname = now +f'_seed{seed}'+ name + opt.postfix + "_train_one_epoch_SBF_v2_UG-E_epoch<1000=UGmix"
-    # nowname = now +f'_seed{seed}'+ name + opt.postfix + "_train_one_epoch_SBF_v2_SetA_UG-D"
-    # nowname = now +f'_seed{seed}'+ name + opt.postfix + "_NEW_FT(sect60)(GLA_SLAugLLA)-case1_set11-UG-blur"
+    nowname = now + f'_seed{seed}' + name + opt.postfix
     logdir = os.path.join("logs", nowname)
     ckptdir = os.path.join(logdir, "checkpoints")
     cfgdir = os.path.join(logdir, "configs")
@@ -182,7 +179,7 @@ if __name__ == "__main__":
     model_config = config.pop("model", OmegaConf.create())
     optimizer_config = config.pop('optimizer', OmegaConf.create())
 
-    SBF_config = config.pop('saliency_balancing_fusion', OmegaConf.create())
+    fiesta_config = config.pop('fourier_semantic_aug', OmegaConf.create())
 
     model = instantiate_from_config(model_config)
     if torch.cuda.is_available():
@@ -199,7 +196,7 @@ if __name__ == "__main__":
     criterion = SetCriterion()
 
     print('optimization parameters: ', opt_params)
-    opt = eval(optimizer_config['target'])(param_dicts, **opt_params) # Adam으로 optimizer 세팅
+    opt = eval(optimizer_config['target'])(param_dicts, **opt_params)  # Adam으로 optimizer 세팅
 
     if optimizer_config.lr_scheduler =='lambda':
         def lambda_rule(epoch):
@@ -246,8 +243,8 @@ if __name__ == "__main__":
 
     for cur_epoch in range(max_epoch):
         print("Current setup title: %s" % nowname)
-        if SBF_config.usage:
-            cur_iter, loss_dict = train_one_epoch_SBF_v2(model, criterion, train_loader, opt, torch.device('cuda'), cur_epoch, cur_iter, optimizer_config.max_iter, SBF_config, visdir)
+        if fiesta_config.usage:
+            cur_iter, loss_dict = train_one_epoch_FIESTA(model, criterion, train_loader, opt, torch.device('cuda'), cur_epoch, cur_iter, optimizer_config.max_iter, visdir)
             train_writer.add_scalar("Train/CE_loss", loss_dict["ce_loss"], cur_epoch)
             train_writer.add_scalar("Train/DICE_loss", loss_dict["dice_loss"], cur_epoch)
         else:
