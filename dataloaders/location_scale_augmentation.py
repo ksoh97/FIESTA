@@ -148,7 +148,7 @@ class FIESTA(object):
         phase = torch.angle(fft_res)
 
         if 0.5 > np.random.random():  # Reversing the histogram distribution of the amplitude
-            amplitude = (2 * np.median(amplitude)) - amplitude
+            amplitude = np.median(amplitude) - amplitude
         amp_masking, amp_intra_modulation = self.amplitude_masking(amplitude=amplitude, phase=phase)
         phase_attention = self.phase_attention_with_Bilateral(amplitude, phase)
 
