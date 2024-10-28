@@ -36,16 +36,68 @@ This repository provides a PyTorch implementation of the following paper:
 <p align="center"><img width="80%" src="https://github.com/user-attachments/assets/67d9319e-da3d-4562-b67b-2ad1704872b9" /></p>
 <p align="center"><img width="80%" src="https://github.com/user-attachments/assets/dd03c88d-bc57-410d-9bf5-0023378c87f9" /></p>
 
+## Data preparation
 
-## Requirements
-* [TensorFlow 2.2.0+](https://www.tensorflow.org/)
-* [Python 3.6+](https://www.continuum.io/downloads)
-* [Scikit-learn 0.23.2+](https://scikit-learn.org/stable/)
-* [Nibabel 3.0.1+](https://nipy.org/nibabel/)
+We conduct datasets preparation following [CSDG](https://github.com/cheng-01037/Causality-Medical-Image-Domain-Generalization)
 
-## Downloading datasets
-To download Alzheimer's disease neuroimaging initiative dataset
-* https://adni.loni.usc.edu/
+<details>
+  <summary>
+    <b>1) Abdominal MRI</b>
+  </summary>
+
+0. Download [Combined Healthy Abdominal Organ Segmentation dataset](https://chaos.grand-challenge.org/) and put the `/MR` folder under `./data/CHAOST2/` directory
+
+1. Converting downloaded data (T2 SPIR) to `nii` files in 3D for the ease of reading.
+
+run `./data/abdominal/CHAOST2/s1_dcm_img_to_nii.sh` to convert dicom images to nifti files.
+
+run `./data/abdominal/CHAOST2/png_gth_to_nii.ipynp` to convert ground truth with `png` format to nifti.
+
+2. Pre-processing downloaded images
+
+run `./data/abdominal/CHAOST2/s2_image_normalize.ipynb`
+
+run `./data/abdominal/CHAOST2/s3_resize_roi_reindex.ipynb`
+
+The processed dataset is stored in `./data/abdominal/CHAOST2/processed/`
+
+</details>
+
+<details>
+  <summary>
+    <b>1) Abdominal CT</b>
+  </summary>
+
+0. Download [Synapse Multi-atlas Abdominal Segmentation dataset](https://www.synapse.org/#!Synapse:syn3193805/wiki/217789) and put the `/img` and `/label` folders under `./data/SABSCT/CT/` directory
+
+1.Pre-processing downloaded images
+
+run `./data/abdominal/SABS/s1_intensity_normalization.ipynb` to apply abdominal window.
+
+run `./data/abdominal/SABS/s2_remove_excessive_boundary.ipynb` to remove excessive blank region. 
+
+run `./data/abdominal/SABS/s3_resample_and_roi.ipynb` to do resampling and roi extraction.
+</details>
+
+The details for cardiac datasets will be given later.
+
+We also provide the [processed datasets](https://drive.google.com/file/d/1WlXGt3Nffzu1bn6co-qaidHjqWH51smU/view?usp=share_link). Download and unzip the file where the folder structure should look this:
+
+```none
+SLAug
+├── ...
+├── data
+│   ├── abdominal
+│   │   ├── CHAOST2
+│   │   │   ├── processed
+│   │   ├── SABSCT
+│   │   │   ├── processed
+│   ├── cardiac
+│   │   ├── processed
+│   │   │   ├── bSSFP
+│   │   │   ├── LGE
+├── ...
+```
 
 ## Citation
 If you find this work useful for your research, please cite the following paper:
@@ -59,5 +111,7 @@ If you find this work useful for your research, please cite the following paper:
 }
 ```
 
-## Acknowledgement
+## Acknowledgements
+Our codes are built upon [CSDG](https://github.com/cheng-01037/Causality-Medical-Image-Domain-Generalization) and [SLAug](https://github.com/Kaiseem/SLAug), thanks for their contribution to the community and the development of researches!
+
 This work was supported by the Institute of Information & communications Technology Planning & Evaluation (IITP) grant funded by the Korea government (MSIT) No. 20220-00959 ((Part 2) Few-Shot Learning of Causal Inference in Vision and Language for Decision Making) and No. 20190-00079 (Department of Artificial Intelligence (Korea University)). This study was further supported by KBRI basic research program through Korea Brain Research Institute funded by the Ministry of Science and ICT (22-BR-03-05).
