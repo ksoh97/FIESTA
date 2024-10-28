@@ -10,24 +10,32 @@ This repository provides a PyTorch implementation of the following paper:
 > **Abstract:** *Single-source domain generalization (SDG) in medical image segmentation (MIS) aims to generalize a model using data from only one source domain to segment data from an unseen target domain. Despite substantial advances in SDG with data augmentation, existing methods often fail to fully consider the details and uncertain areas prevalent in MIS, leading to mis-segmentation. This paper proposes a Fourier-based semantic augmentation method called FIESTA using uncertainty guidance to enhance the fundamental goals of MIS in an SDG context by manipulating the amplitude and phase components in the frequency domain. The proposed Fourier augmentative transformer addresses semantic amplitude modulation based on meaningful angular points to induce pertinent variations and harnesses the phase spectrum to ensure structural coherence. Moreover, FIESTA employs epistemic uncertainty to fine-tune the augmentation process, improving the ability of the model to adapt to diverse augmented data and concentrate on areas with higher ambiguity. Extensive experiments across three cross-domain scenarios demonstrate that FIESTA surpasses recent state-of-the-art SDG approaches in segmentation performance and significantly contributes to boosting the applicability of the model in medical imaging modalities.*
 
 ## Overall Framework
+<p align="center"><img width="90%" src="https://github.com/user-attachments/assets/9d52bbf4-9d93-4afe-afef-3f7e9eb730d9" /></p>
+<p align="center"><img width="90%" src="https://github.com/user-attachments/assets/15c44327-f66a-4bf6-b0f6-21201b167689" /></p>
+
 - To the best of our knowledge, this work is the first Fourier-based augmentation method that simultaneously manipulates amplitude and phase components using meaningful factors tailored to SDG for cross-domain MIS.
 - We propose the FAT, providing an advanced augmentation strategy that combines masking and modulation techniques to transform the amplitude spectrum and applies filtering to refine the phase information to impose structural integrity.
 - The FIESTA framework embraces an uncertainty-guided mutual augmentation strategy by applying UG to focus learning in the segmentation model on certain areas of high ambiguity or mis-segmented locations.
 - Based on the quantitative and qualitative experimental results on various cross-domain scenarios (including cross-modality, cross-sequence, and cross-sites), we demonstrate the significant robustness and generalizability of FIESTA, which surpasses state-of-the-art SDG methods.
 
-<p align="center"><img width="90%" src="https://github.com/ku-milab/LiCoL/assets/57162425/17ef8f9e-d315-4b13-b3b8-eed65f1f2ecd" /></p>
+## Comparison with State-of-the-art SDG Methods
+### Quantitative Evaluations
+<p align="center"><img width="85%" src="https://github.com/user-attachments/assets/8a467907-d49a-41a5-80bf-8733b6fc9af2" /></p>
+<p align="center"><img width="90%" src="https://github.com/user-attachments/assets/f4901e3f-775e-49a3-9795-b91437790d86" /></p>
 
-## Qualitative Analyses
-### Illustration of inferred AD-effect and statistical maps in binary and multi-class scenarios
-<p align="center"><img width="100%" src="https://github.com/ku-milab/LiCoL/assets/57162425/d9fae7e4-a506-4fdd-b36f-19f7bb29b54f" /></p>
-<p align="center"><img width="65%" src="https://github.com/ku-milab/LiCoL/assets/57162425/532c56a6-d412-4822-b89b-1e3d8b6b3c0a" /></p>
+### Qualitative Analyses 
+<p align="center"><img width="100%" src="https://github.com/user-attachments/assets/86ba83c0-7932-4b09-bd37-58d5a8fa9251" /></p>
 
-### Visualization of a normalized AD-relatedness index over the group-wise (first column) and individuals (second and third columns) 
-<p align="center"><img width="100%" src="https://github.com/ku-milab/LiCoL/assets/57162425/2168d64a-6c21-46bc-a6c6-2deabd9ae2be" /></p>
+## Visualization of Uncertainty Guidance Effects
+<p align="center"><img width="80%" src="https://github.com/user-attachments/assets/f31c7804-4f54-4c35-a60f-0e2b24651813" /></p>
 
-## Quantitative Evaluations
-<p align="center"><img width="100%" src="https://github.com/ku-milab/LiCoL/assets/57162425/7438832c-9fff-48ea-a46c-ba6306e8c7e4" /></p>
-<p align="center"><img width="50%" src="https://github.com/ku-milab/LiCoL/assets/57162425/44d146ef-5884-4f98-9f8a-6f50ee7ef060" /></p>
+## Ablation Study
+<p align="center"><img width="80%" src="https://github.com/user-attachments/assets/6eee8e06-c98b-4e36-a4f3-dd6730a265d6" /></p>
+
+## Scalability Verification Using the Segment Anything Model
+<p align="center"><img width="80%" src="https://github.com/user-attachments/assets/67d9319e-da3d-4562-b67b-2ad1704872b9" /></p>
+<p align="center"><img width="80%" src="https://github.com/user-attachments/assets/dd03c88d-bc57-410d-9bf5-0023378c87f9" /></p>
+
 
 ## Requirements
 * [TensorFlow 2.2.0+](https://www.tensorflow.org/)
@@ -39,41 +47,15 @@ This repository provides a PyTorch implementation of the following paper:
 To download Alzheimer's disease neuroimaging initiative dataset
 * https://adni.loni.usc.edu/
 
-## How to Run
-### Counterfactual Map Generation
-Mode: #0 Learn, #1 Explain
-
-1. Learn: pre-training the predictive model
->- `CMG_config.py --mode="Learn"`
->- Set the mode as a "Learn" to train the predictive model
-
-2. Explain: Counterfactual map generation using a pre-trained diagnostic model
->- `CMG_config.py --mode="Explain" --dataset=None --scenario=None`
->- Change the mode from "Learn" to "Explain" on Config.py
->- Set the classifier and encoder weight for training (freeze)
->- Set the variables of dataset and scenario for training
-
-### AD-Effect Map and LiCoL
-1. AD-effect map acquisition based on manipulated real-/counterfactual-labeled gray matter density maps
->- `AD-effect Map Acquisition.ipynb`
->- This step for the AD-effect map acquisition was implemented by using the Jupyter notebook
->- Execute markdown cells written in jupyter notebook in order
-
-2. LiCoL
->- `LiCoL_ALL.py --datatset=None --scenario=None --data_path==None`
->- Set the variables of dataset and scenario for training
->- For example, dataset="ADNI" and scenario="CN_AD"
->- Modify the data path for uploading the dataset (=line 234)
-
 ## Citation
 If you find this work useful for your research, please cite the following paper:
 
 ```
-@article{oh2023quantitatively,
-  title={A Quantitatively Interpretable Model for Alzheimer's Disease Prediction Using Deep Counterfactuals},
-  author={Oh, Kwanseok and Heo, Da-Woon and Mulyadi, Ahmad Wisnu and Jung, Wonsik and Kang, Eunsong and Lee, Kun Ho and Suk, Heung-Il},
-  journal={arXiv preprint arXiv:2310.03457},
-  year={2023}
+@article{oh2024fiesta,
+  title={FIESTA: Fourier-Based Semantic Augmentation with Uncertainty Guidance for Enhanced Domain Generalizability in Medical Image Segmentation},
+  author={Oh, Kwanseok and Jeon, Eunjin and Heo, Da-Woon and Shin, Yooseung and Suk, Heung-Il},
+  journal={arXiv preprint arXiv:2406.14308},
+  year={2024}
 }
 ```
 
