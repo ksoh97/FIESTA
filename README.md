@@ -7,7 +7,7 @@ This repository provides a PyTorch implementation of the following paper:
 > (<sup>2</sup>Department of Brain and Cognitive Engineering, Korea University) <br/>
 > (<sup>3</sup>Samsung Electronics Company Ltd.) <br/>
 > (<sup>4</sup>Heuron Company Ltd.) <br/>
-> Official Version: https://arxiv.org/abs/2406.14308 <br/>
+> Published in IEEE TNNLS: https://doi.org/10.1109/tnnls.2025.3620853 <br/>
 > 
 > **Abstract:** *Single-source domain generalization (SDG) in medical image segmentation (MIS) aims to generalize a model using data from only one source domain to segment data from an unseen target domain. Despite substantial advances in SDG with data augmentation, existing methods often fail to fully consider the details and uncertain areas prevalent in MIS, leading to mis-segmentation. This paper proposes a Fourier-based semantic augmentation method called FIESTA using uncertainty guidance to enhance the fundamental goals of MIS in an SDG context by manipulating the amplitude and phase components in the frequency domain. The proposed Fourier augmentative transformer addresses semantic amplitude modulation based on meaningful angular points to induce pertinent variations and harnesses the phase spectrum to ensure structural coherence. Moreover, FIESTA employs epistemic uncertainty to fine-tune the augmentation process, improving the ability of the model to adapt to diverse augmented data and concentrate on areas with higher ambiguity. Extensive experiments across three cross-domain scenarios demonstrate that FIESTA surpasses recent state-of-the-art SDG approaches in segmentation performance and significantly contributes to boosting the applicability of the model in medical imaging modalities.*
 
