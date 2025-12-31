@@ -106,7 +106,7 @@ If you find this work useful for your research, please cite the following paper:
 
 ```
 @article{oh2025fiesta,
-  title={Fiesta: Fourier-based semantic augmentation with uncertainty guidance for enhanced domain generalizability in medical image segmentation},
+  title={FIESTA: Fourier-based semantic augmentation with uncertainty guidance for enhanced domain generalizability in medical image segmentation},
   author={Oh, Kwanseok and Jeon, Eunjin and Heo, Da-Woon and Shin, Yooseung and Suk, Heung-Il},
   journal={IEEE Transactions on Neural Networks and Learning Systems},
   year={2025},
