@@ -105,11 +105,12 @@ SLAug
 If you find this work useful for your research, please cite the following paper:
 
 ```
-@article{oh2024fiesta,
-  title={FIESTA: Fourier-Based Semantic Augmentation with Uncertainty Guidance for Enhanced Domain Generalizability in Medical Image Segmentation},
+@article{oh2025fiesta,
+  title={Fiesta: Fourier-based semantic augmentation with uncertainty guidance for enhanced domain generalizability in medical image segmentation},
   author={Oh, Kwanseok and Jeon, Eunjin and Heo, Da-Woon and Shin, Yooseung and Suk, Heung-Il},
-  journal={arXiv preprint arXiv:2406.14308},
-  year={2024}
+  journal={IEEE Transactions on Neural Networks and Learning Systems},
+  year={2025},
+  publisher={IEEE}
 }
 ```
 
