@@ -1,4 +1,4 @@
-# FIESTA
+# FIESTA 
 
 This repository provides a PyTorch implementation of the following paper:
 > **FIESTA: Fourier-Based Semantic Augmentation with Uncertainty Guidance for Enhanced Domain Generalizability in Medical Image Segmentation**<br>
